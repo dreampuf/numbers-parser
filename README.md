@@ -13,7 +13,7 @@ A Go library for parsing Apple Numbers `.numbers` files. This is a Go port of th
 ## Installation
 
 ```bash
-go get github.com/numbers-parser-go
+go get github.com/dreampuf/numbers-parser-go
 ```
 
 ## Quick Start
@@ -25,7 +25,7 @@ import (
     "fmt"
     "log"
     
-    "github.com/numbers-parser-go/pkg/numbers"
+    "github.com/dreampuf/numbers-parser-go/pkg/numbers"
 )
 
 func main() {

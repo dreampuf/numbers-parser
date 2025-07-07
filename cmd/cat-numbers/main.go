@@ -8,7 +8,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/numbers-parser-go/pkg/numbers"
+	"github.com/dreampuf/numbers-parser-go/pkg/numbers"
 )
 
 func main() {

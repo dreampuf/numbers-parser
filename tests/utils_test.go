@@ -3,7 +3,7 @@ package tests
 import (
 	"testing"
 
-	"github.com/numbers-parser-go/pkg/numbers"
+	"github.com/dreampuf/numbers-parser-go/pkg/numbers"
 )
 
 func TestExcelColumnToNumber(t *testing.T) {

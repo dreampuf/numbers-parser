@@ -111,7 +111,7 @@ print(cell.value)
 
 ### Go Usage
 ```go
-import "github.com/numbers-parser-go/pkg/numbers"
+import "github.com/dreampuf/numbers-parser-go/pkg/numbers"
 
 doc, _ := numbers.OpenDocument("file.numbers")
 defer doc.Close()
@@ -208,7 +208,7 @@ While the Go version provides core functionality, some advanced features from th
 
 ### Installation
 ```bash
-go get github.com/numbers-parser-go/pkg/numbers
+go get github.com/dreampuf/numbers-parser-go/pkg/numbers
 ```
 
 ### Building

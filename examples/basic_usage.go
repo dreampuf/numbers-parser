@@ -5,7 +5,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/numbers-parser-go/pkg/numbers"
+	"github.com/dreampuf/numbers-parser-go/pkg/numbers"
 )
 
 func main() {

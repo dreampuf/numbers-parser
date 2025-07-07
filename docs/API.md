@@ -7,7 +7,7 @@ The `numbers-parser-go` library provides a Go interface for reading and writing 
 ## Package Structure
 
 ```
-github.com/numbers-parser-go/pkg/numbers
+github.com/dreampuf/numbers-parser-go/pkg/numbers
 ```
 
 ## Core Types
@@ -265,7 +265,7 @@ import (
     "fmt"
     "log"
     
-    "github.com/numbers-parser-go/pkg/numbers"
+    "github.com/dreampuf/numbers-parser-go/pkg/numbers"
 )
 
 func main() {
