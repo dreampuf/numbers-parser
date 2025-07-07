@@ -4,27 +4,30 @@ IDENTITY := $(shell security find-identity -v -p codesigning | head -n 1 | pytho
 # Change this to the location of the proto-dump executable
 PROTOC=/usr/local/bin/protoc
 
-# Location of the Numbers application
+# Location of the Numbers application
 NUMBERS=/Applications/Numbers.app
 
-# Xcode version of Python that includes LLDB package
+# Xcode version of Python that includes LLDB package
 LLDB_PYTHON_PATH := ${shell lldb --python-path}
 
 PACKAGE=numbers-parser
 package_c := $(subst -,_,$(PACKAGE))
 
-.PHONY: clean veryclean test coverage profile sdist upload docs
+# Go parameters
+GOCMD=go
+GOBUILD=$(GOCMD) build
+GOCLEAN=$(GOCMD) clean
+GOTEST=$(GOCMD) test
+GOGET=$(GOCMD) get
+GOMOD=$(GOCMD) mod
 
-all:
-	@echo "make targets:"
-	@echo "    test       - run pytest with all tests"
-	@echo "    docs       - rebuild maekdown docs from source"
-	@echo "    profile    - run pytest and generate a profile graph"
-	@echo "    dist       - build distributions"
-	@echo "    upload     - upload package to PyPI"
-	@echo "    clean      - delete temporary files for test, coverage, etc."
-	@echo "    veryclean  - delete all auto-generated files (requires new bootstrap)"
-	@echo "    bootstrap  - rebuild all auto-generated files for new Numbers version"
+# Binary names
+BINARY_CAT=cat-numbers
+BINARY_CONV=numbers2csv
+
+.PHONY: clean veryclean test coverage profile sdist upload docs build build-cat build-conv deps example install dev-deps lint fmt docker-build docker-run help
+
+all: test build
 
 dist:
 	uv run -m build
@@ -154,3 +157,61 @@ clean:
 	rm -rf docs/build
 	rm -rf .tox
 	rm -rf .pytest_cache
+
+build: build-cat build-conv
+
+build-cat:
+	$(GOBUILD) -o bin/$(BINARY_CAT) cmd/cat-numbers/main.go
+
+build-conv:
+	$(GOBUILD) -o bin/$(BINARY_CONV) cmd/numbers2csv/main.go
+
+deps:
+	$(GOMOD) download
+	$(GOMOD) tidy
+
+example:
+	$(GOBUILD) -o bin/example examples/basic_usage.go
+	./bin/example
+
+install:
+	$(GOBUILD) -o $(GOPATH)/bin/$(BINARY_CAT) cmd/cat-numbers/main.go
+	$(GOBUILD) -o $(GOPATH)/bin/$(BINARY_CONV) cmd/numbers2csv/main.go
+
+# Development targets
+dev-deps:
+	$(GOGET) -u golang.org/x/tools/cmd/goimports
+	$(GOGET) -u golang.org/x/lint/golint
+
+lint:
+	golint ./pkg/...
+	golint ./cmd/...
+
+fmt:
+	$(GOCMD) fmt ./...
+	goimports -w .
+
+# Docker targets
+docker-build:
+	docker build -t numbers-parser-go .
+
+docker-run:
+	docker run --rm -v $(PWD):/workspace numbers-parser-go
+
+# Help
+help:
+	@echo "Available targets:"
+	@echo "  all          - Run tests and build binaries"
+	@echo "  build        - Build all binaries"
+	@echo "  build-cat    - Build cat-numbers binary"
+	@echo "  build-conv   - Build numbers2csv binary"
+	@echo "  clean        - Clean build artifacts"
+	@echo "  test         - Run all tests"
+	@echo "  test-coverage- Run tests with coverage report"
+	@echo "  deps         - Download and tidy dependencies"
+	@echo "  example      - Build and run basic example"
+	@echo "  install      - Install binaries to GOPATH/bin"
+	@echo "  dev-deps     - Install development dependencies"
+	@echo "  lint         - Run linters"
+	@echo "  fmt          - Format code"
+	@echo "  help         - Show this help message"
